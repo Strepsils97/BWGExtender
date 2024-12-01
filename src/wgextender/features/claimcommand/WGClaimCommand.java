@@ -18,27 +18,29 @@ import com.sk89q.worldguard.protection.util.DomainInputResolver.UserLocatorPolic
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import wgextender.Config;
+import wgextender.WGExtender;
 import wgextender.utils.WEUtils;
 import wgextender.utils.WGRegionUtils;
 
 public class WGClaimCommand {
 
 	protected static void claim(String id, CommandSender sender) throws CommandException {
+		Config config = WGExtender.getInstance().getLocalConfig();
 		if (!(sender instanceof Player player)) {
-			throw new CommandException("Эта команда только для игроков");
+			throw new CommandException(config.getMessage("region-claimed.error.player"));
 		}
 		if (id.equalsIgnoreCase("__global__")) {
-			throw new CommandException("Нельзя заприватить __global__.");
+			throw new CommandException(config.getMessage("region-claimed.error.global"));
 		}
 		if (!ProtectedRegion.isValidId(id) || id.startsWith("-")) {
-			throw new CommandException("Имя региона '" + id + "' содержит запрещённые символы.");
+			throw new CommandException(config.getMessage("region-claimed.error.name") + id + config.getMessage("region-claimed.error.forbidden"));
 		}
 
         BukkitWorldConfiguration wcfg = WGRegionUtils.getWorldConfig(player);
 
 		if (wcfg.maxClaimVolume == Integer.MAX_VALUE) {
-			throw new CommandException("The maximum claim volume get in the configuration is higher than is supported. " +
-					"Currently, it must be " + Integer.MAX_VALUE + " or smaller. Please contact a server administrator.");
+			throw new CommandException(config.getMessage("region-claimed.error.volume") + config.getMessage("region-claimed.error.volume-current") + Integer.MAX_VALUE + config.getMessage("region-claimed.error.volume-hint"));
 		}
 
 		LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
@@ -51,7 +53,7 @@ public class WGClaimCommand {
 		RegionManager manager = WGRegionUtils.getRegionManager(player.getWorld());
 
 		if (manager.hasRegion(id)) {
-			throw new CommandException("Регион с таким именем уже существует, выберите другое.");
+			throw new CommandException(config.getMessage("region-claimed.error.name-exists"));
 		}
 
 		ProtectedRegion region = createProtectedRegionFromSelection(player, id);
@@ -59,10 +61,10 @@ public class WGClaimCommand {
 		if (!permModel.mayClaimRegionsUnbounded()) {
 			int maxRegionCount = wcfg.getMaxRegionCount(localPlayer);
 			if ((maxRegionCount >= 0) && (manager.getRegionCountOfPlayer(localPlayer) >= maxRegionCount)) {
-				throw new CommandException("У вас слишком много регионов, удалите один из них перед тем как заприватить новый.");
+				throw new CommandException(config.getMessage("region-claimed.error.count"));
 			}
 			if (region.volume() > wcfg.maxClaimVolume) {
-				throw new CommandException("Размер региона слишком большой. Максимальный размер: " + wcfg.maxClaimVolume + ", ваш размер: " + region.volume());
+				throw new CommandException(config.getMessage("region-claimed.error.size") + wcfg.maxClaimVolume + config.getMessage("region-claimed.error.size-hint") + region.volume());
 			}
 		}
 
@@ -70,10 +72,10 @@ public class WGClaimCommand {
 
 		if (regions.size() > 0) {
 			if (!regions.isOwnerOfAll(localPlayer)) {
-				throw new CommandException("Это регион перекрывает чужой регион.");
+				throw new CommandException(config.getMessage("region-claimed.error.overlap"));
 			}
 		} else if (wcfg.claimOnlyInsideExistingRegions) {
-			throw new CommandException("Вы можете приватить только внутри своих регионов.");
+			throw new CommandException(config.getMessage("region-claimed.error.restricted"));
 		}
 
 		RegionAdder task = new RegionAdder(manager, region);
@@ -81,23 +83,24 @@ public class WGClaimCommand {
 		task.setOwnersInput(new String[] { player.getName() });
 		try {
 			task.call();
-			sender.sendMessage(ChatColor.YELLOW + "Вы заприватили регион "+id);
+			sender.sendMessage(ChatColor.YELLOW + config.getMessage("region-claimed.success") + id);
 		} catch (Exception e) {
-			sender.sendMessage(ChatColor.YELLOW + "Произошла ошибка при привате региона "+id);
+			sender.sendMessage(ChatColor.YELLOW + config.getMessage("region-claimed.error.unknown") + id);
 			e.printStackTrace();
 		}
 	}
 
 	private static ProtectedRegion createProtectedRegionFromSelection(Player player, String id) throws CommandException {
+		Config config = WGExtender.getInstance().getLocalConfig();
 		try {
 			Region selection = WEUtils.getSelection(player);
 			if (selection instanceof CuboidRegion) {
 				return new ProtectedCuboidRegion(id, selection.getMinimumPoint(), selection.getMaximumPoint());
 			} else {
-				throw new CommandException("Вы можете использовать только кубическкую территорию.");
+				throw new CommandException(config.getMessage("region-selection.error.shape"));
 			}
 		} catch (IncompleteRegionException e) {
-			throw new CommandException("Сначала выделите территорию. " + "Используйте WorldEdit для выделения " + "(wiki: http://wiki.sk89q.com/wiki/WorldEdit).");
+			throw new CommandException(config.getMessage("region-selection.error.select"));
 		}
 
 	}

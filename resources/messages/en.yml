@@ -1,0 +1,63 @@
+region-claimed:
+  success: "You have claimed the region "
+  error:
+    unknown: "An error occurred while claiming the region "
+    name: "The name of the region '"
+    player: "This command is for players only"
+    global: "Cannot claim __global__."
+    forbidden: "' contains forbidden characters."
+    restricted: "You can only claim within your own regions."
+    overlap: "This region overlaps with someone else's region."
+    size: "The size of the region is too large. Maximum size: "
+    size-hint: ", your size: "
+    count: "You have too many regions, delete one before claiming a new one."
+    name-exists: "A region with this name already exists, please choose another one."
+    volume: "The maximum claim volume set in the configuration is higher than is supported. "
+    volume-current: "Currently, it must be "
+    volume-hint: " or smaller. Please contact a server administrator."
+region-selection:
+  vertical-auto: "The region has been automatically expanded vertically"
+  error:
+    shape: "You can only use cubic areas."
+    select: "First, select an area. Use WorldEdit for selection (wiki: http://wiki.sk89q.com/wiki/WorldEdit)."
+flags:
+  error:
+    chorus: "You cannot use chorus in this region"
+permissions:
+  denied: "Insufficient permissions"
+  forbidden-region: "You cannot use this command in someone else's region"
+help:
+  reload: "wgex reload - reload configuration"
+  search: "wgex search - searches for regions in the selected area"
+  setflag: "wgex setflag {world} {flag} {value} - sets the {flag} with value {value} for all regions in the world {world}"
+  removeowner: "wgex removeowner {name} - removes a player from the owners list of all regions"
+  removemember: "wgex removemember {name} - removes a player from the members list of all regions"
+reload:
+  success: "Configuration reloaded"
+search:
+  error:
+    not-found: "No regions found overlapping the selected area"
+    overlap: "Regions found overlapping the selected area: "
+    incomplete: "Please select a search area first"
+setflag:
+  success: "Flags have been set"
+  error:
+    format: "Incorrect flag format "
+    world-not-found: "World not found"
+    flag-not-found: "Flag not found"
+removeplayer:
+  success: "Player removed from "
+  owners: "owners"
+  members: "members"
+  all-regions: " of all regions"
+wrapper:
+  deny-max-volume: "You cannot claim such a large region"
+  deny-min-volume: "You cannot claim such a small region"
+  deny-horizontal: "You cannot claim such a narrow region"
+  deny-vertical: "You cannot claim such a low region"
+  max-limit: "Your limit: "
+  min-limit: "Minimum volume: "
+  horizontal-limit: "Minimum width: "
+  vertical-limit: "Minimum height: "
+  limit-hint: ", you attempted to claim: "
+  wand: "Territory selection tool granted"

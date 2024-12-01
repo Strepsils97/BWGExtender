@@ -40,8 +40,14 @@ import java.util.logging.Level;
 public class WGExtender extends JavaPlugin {
 
 	private static WGExtender instance;
+	private Config localConfig;
+
 	public static WGExtender getInstance() {
 		return instance;
+	}
+
+	public Config getLocalConfig() {
+		return this.localConfig;
 	}
 
 	public WGExtender() {
@@ -61,6 +67,7 @@ public class WGExtender extends JavaPlugin {
 		VaultIntegration.getInstance().initialize(this);
 		Config config = new Config(this);
 		config.loadConfig();
+		this.localConfig = config;
 		Objects.requireNonNull(getCommand("wgex")).setExecutor(new Commands(config));
 		PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new RestrictCommands(config), this);

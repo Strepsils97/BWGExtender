@@ -24,6 +24,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import wgextender.utils.LanguageLoader;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -33,9 +34,16 @@ public class Config {
 
 	private final Plugin plugin;
 	protected final File configFile;
+	private LanguageLoader languageLoader;
+
+	public String getMessage(String key) {
+		return languageLoader.getMessage(key);
+	}
+
 	public Config(WGExtender plugin) {
 		this.plugin = plugin;
 		configFile = new File(plugin.getDataFolder(), "config.yml");
+		this.languageLoader = new LanguageLoader(plugin, "en");
 	}
 
 	public boolean claimExpandSelectionVertical = false;
@@ -80,7 +88,7 @@ public class Config {
 
 	private void loadAll() {
 		FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-
+		languageLoader = new LanguageLoader(plugin, config.getString("language", "en"));
 		claimExpandSelectionVertical = config.getBoolean("claim.vertexpand", claimExpandSelectionVertical);
 
 		claimBlockLimitsEnabled = config.getBoolean("claim.blocklimits.enabled", claimBlockLimitsEnabled);
@@ -144,6 +152,7 @@ public class Config {
 			miscDefaultPvPFlagOperationMode = null;
 		}
 		miscOldPvpFlags = config.getBoolean("misc.old-pvp-flags");
+
 	}
 
 	private static BigInteger asBig(ConfigurationSection section, String key) {

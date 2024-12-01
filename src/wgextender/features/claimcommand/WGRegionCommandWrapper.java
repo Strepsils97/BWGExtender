@@ -59,7 +59,7 @@ public class WGRegionCommandWrapper extends Command {
 			if (config.claimExpandSelectionVertical) {
 				boolean result = WEUtils.expandVert((Player) sender);
 				if (result) {
-					player.sendMessage(YELLOW + "Регион автоматически расширен по вертикали");
+					player.sendMessage(YELLOW + config.getMessage("region-selection.vertical-auto"));
 				}
 			}
 			if (!process(player)) {
@@ -85,23 +85,23 @@ public class WGRegionCommandWrapper extends Command {
 		return switch (info.result()) {
             case ALLOW -> true;
 			case DENY_MAX_VOLUME -> {
-				player.sendMessage(RED + "Вы не можете заприватить такой большой регион");
-				player.sendMessage(RED + "Ваш лимит: "+info.assignedLimit()+", вы попытались заприватить: "+info.assignedSize());
+				player.sendMessage(RED + config.getMessage("wrapper.deny-max-volume"));
+				player.sendMessage(RED + config.getMessage("wrapper.max-limit")+info.assignedLimit()+config.getMessage("wrapper.limit-hint")+info.assignedSize());
 				yield false;
 			}
 			case DENY_MIN_VOLUME -> {
-				player.sendMessage(RED + "Вы не можете заприватить такой маленький регион");
-				player.sendMessage(RED + "Минимальный объем: "+info.assignedLimit()+", вы попытались заприватить: "+info.assignedSize());
+				player.sendMessage(RED + config.getMessage("wrapper.deny-min-volume"));
+				player.sendMessage(RED + config.getMessage("wrapper.min-limit")+info.assignedLimit()+config.getMessage("wrapper.limit-hint")+info.assignedSize());
 				yield false;
 			}
 			case DENY_HORIZONTAL -> {
-				player.sendMessage(RED + "Вы не можете заприватить такой узкий регион");
-				player.sendMessage(RED + "Минимальная ширина: "+info.assignedLimit()+", вы попытались заприватить: "+info.assignedSize());
+				player.sendMessage(RED + config.getMessage("wrapper.deny-horizontal"));
+				player.sendMessage(RED + config.getMessage("wrapper.horizontal-limit")+info.assignedLimit()+config.getMessage("wrapper.limit-hint")+info.assignedSize());
 				yield false;
 			}
 			case DENY_VERTICAL -> {
-				player.sendMessage(RED + "Вы не можете заприватить такой низкий регион");
-				player.sendMessage(RED + "Минимальная высота: "+info.assignedLimit()+", вы попытались заприватить: "+info.assignedSize());
+				player.sendMessage(RED + config.getMessage("wrapper.deny-vertical"));
+				player.sendMessage(RED + config.getMessage("wrapper.vertical-limit")+info.assignedLimit()+config.getMessage("wrapper.limit-hint")+info.assignedSize());
 				yield false;
 			}
 		};

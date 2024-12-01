@@ -82,7 +82,7 @@ public class RestrictCommands implements Listener {
 			for (String rcommand : restrictedCommands) {
 				if (command.startsWith(rcommand) && (command.length() == rcommand.length() || command.charAt(rcommand.length()) == ' ')) {
 					event.setCancelled(true);
-					player.sendMessage(ChatColor.RED + "Вы не можете использовать эту команду в чужом регионе");
+					player.sendMessage(ChatColor.RED + config.getMessage("permissions.forbidden-region"));
 					return;
 				}
 			}

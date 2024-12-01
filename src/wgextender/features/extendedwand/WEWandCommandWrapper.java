@@ -52,7 +52,7 @@ public class WEWandCommandWrapper extends Command {
 		}
 		if (sender instanceof Player player) {
 			player.getInventory().addItem(WEWand.getWand());
-			player.sendMessage(ChatColor.LIGHT_PURPLE+"Выдана вещь для выделения территории");
+			player.sendMessage(ChatColor.LIGHT_PURPLE+config.getMessage("wrapper.wand"));
 		}
 		return true;
 	}
